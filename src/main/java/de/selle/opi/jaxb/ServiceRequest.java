@@ -114,7 +114,7 @@ public class ServiceRequest {
     protected ServiceRequest.PrivateData privateData;
 
     @XmlAttribute(name = "RequestID")
-    protected Byte requestID;
+    protected int requestID;
 
     /**
      * Identifies the logical workstation (associated to the socket)
@@ -185,9 +185,9 @@ public class ServiceRequest {
      * 
      * @return
      *         possible object is
-     *         {@link Byte }
+     *         {@link int }
      */
-    public Byte getRequestID() {
+    public int getRequestID() {
 	return this.requestID;
     }
 
@@ -196,9 +196,9 @@ public class ServiceRequest {
      * 
      * @param value
      *              allowed object is
-     *              {@link Byte }
+     *              {@link int }
      */
-    public void setRequestID(final Byte value) {
+    public void setRequestID(final int value) {
 	this.requestID = value;
     }
 
@@ -674,7 +674,7 @@ public class ServiceRequest {
 		protected String value;
 
 		@XmlAttribute(name = "Timeout")
-		protected Short timeout;
+		protected int timeout;
 
 		/**
 		 * Ruft den Wert der value-Eigenschaft ab.
@@ -703,9 +703,9 @@ public class ServiceRequest {
 		 * 
 		 * @return
 		 *         possible object is
-		 *         {@link Short }
+		 *         {@link int }
 		 */
-		public Short getTimeout() {
+		public int getTimeout() {
 		    return this.timeout;
 		}
 
@@ -714,9 +714,9 @@ public class ServiceRequest {
 		 * 
 		 * @param value
 		 *              allowed object is
-		 *              {@link Short }
+		 *              {@link int }
 		 */
-		public void setTimeout(final Short value) {
+		public void setTimeout(final int value) {
 		    this.timeout = value;
 		}
 

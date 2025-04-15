@@ -1,6 +1,6 @@
 package de.selle.opi.utilities;
 
-public enum ServiceRequestType {
+public enum RequestType {
     Diagnosis,
     SendOfflineTransactions,
     Reconciliation,
@@ -29,5 +29,7 @@ public enum ServiceRequestType {
      * This request was not consistent with the rules of managing request one at a time and it
      * introduces complexity.
      */
-    AbortRequest;
+    AbortRequest,
+    
+    CardPayment;
 }

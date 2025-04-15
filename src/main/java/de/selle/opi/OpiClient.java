@@ -2,13 +2,13 @@ package de.selle.opi;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import de.selle.utilities.JAXBHelper;
 
 /**
  * OPI-Client zum Senden von Nachrichten zum EC-Terminal
@@ -40,15 +40,20 @@ public class OpiClient {
             // Sende die Nachricht
             socket.getOutputStream().write(new byte[]{0x00,0x00,0x03, 0x5f});
             socket.getOutputStream().write(xmlData.getBytes());
-            logger.debug("- Nachricht gesendet");
+            logger.debug("Nachricht gesendet");
 
             // Empfange die Antwort
             final StringBuilder xmlResponse = new StringBuilder();
             final char[] buffer = new char[65535];
             in.read(buffer);
-            for (char letter: buffer) {
-                xmlResponse.append(letter);
+            for (final char letter: buffer) {
+            	if (Character.isLetterOrDigit(letter) || Character.isWhitespace(letter) || JAXBHelper.isPunctuation(letter)) {
+            		xmlResponse.append(letter);
+            	}
             }
+            
+//            final ServiceResponse response = JAXBHelper.unmarshallToJaxb(ServiceResponse.class, xmlResponse.toString(), null);
+//            logger.warn(response.getRequestID());
 
             return xmlResponse.toString();
 

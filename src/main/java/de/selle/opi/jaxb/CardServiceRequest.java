@@ -73,7 +73,7 @@ public class CardServiceRequest {
     protected CardServiceRequest.TotalAmount totalAmount;
 
     @XmlAttribute(name = "RequestID")
-    protected Byte requestID;
+    protected int requestID;
 
     /**
      * Identifies the logical workstation (associated to the socket) sending the
@@ -86,7 +86,7 @@ public class CardServiceRequest {
      * <strong>Required</strong>
      */
     @XmlAttribute(name = "WorkstationID")
-    protected Byte workstationID;
+    protected String workstationID;
 
     /**
      * Identifies the application sending the request. Used only for information
@@ -150,7 +150,7 @@ public class CardServiceRequest {
      *         possible object is
      *         {@link Byte }
      */
-    public Byte getRequestID() {
+    public int getRequestID() {
 	return this.requestID;
     }
 
@@ -159,9 +159,9 @@ public class CardServiceRequest {
      * 
      * @param value
      *              allowed object is
-     *              {@link Byte }
+     *              {@link int }
      */
-    public void setRequestID(final Byte value) {
+    public void setRequestID(final int value) {
 	this.requestID = value;
     }
 
@@ -170,9 +170,9 @@ public class CardServiceRequest {
      * 
      * @return
      *         possible object is
-     *         {@link Byte }
+     *         {@link String }
      */
-    public Byte getWorkstationID() {
+    public String getWorkstationID() {
 	return this.workstationID;
     }
 
@@ -181,9 +181,9 @@ public class CardServiceRequest {
      * 
      * @param value
      *              allowed object is
-     *              {@link Byte }
+     *              {@link String }
      */
-    public void setWorkstationID(final Byte value) {
+    public void setWorkstationID(final String value) {
 	this.workstationID = value;
     }
 
@@ -263,7 +263,7 @@ public class CardServiceRequest {
 	protected String manualPAN;
 
 	@XmlElement(name = "TransactionNumber")
-	protected byte transactionNumber;
+	protected int transactionNumber;
 
 	/**
 	 * Ruft den Wert der posTimeStamp-Eigenschaft ab.
@@ -312,14 +312,14 @@ public class CardServiceRequest {
 	/**
 	 * Ruft den Wert der transactionNumber-Eigenschaft ab.
 	 */
-	public byte getTransactionNumber() {
+	public int getTransactionNumber() {
 	    return this.transactionNumber;
 	}
 
 	/**
 	 * Legt den Wert der transactionNumber-Eigenschaft fest.
 	 */
-	public void setTransactionNumber(final byte value) {
+	public void setTransactionNumber(final int value) {
 	    this.transactionNumber = value;
 	}
 
