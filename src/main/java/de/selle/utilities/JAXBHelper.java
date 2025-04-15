@@ -123,6 +123,7 @@ public final class JAXBHelper {
 	StringWriter writer = new StringWriter();
 	JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
 	Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+	jaxbMarshaller.setProperty(Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION, "C:\\\\Program Files\\\\Wincor Nixdorf\\\\Wincor Nixdorf OPI\\\\OPISchema\\\\ServiceRequest.xsd");
 	jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.valueOf(formattedOutput));
 	jaxbMarshaller.setSchema(xsdSchema);
 	jaxbMarshaller.marshal(object, writer);

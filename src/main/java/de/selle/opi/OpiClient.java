@@ -28,7 +28,9 @@ public class OpiClient {
         this.port = port;
     }
 
-    public String sendMessage(final String xmlData) {
+    public String sendMessage(String xmlData) {
+        xmlData = xmlData.replaceAll("ns5:", "");
+        xmlData = xmlData.replaceAll(":ns5", "");
         logger.debug("sendMessage:\n{}", xmlData);
         try (final Socket socket = new Socket(this.serverIp, this.port);
              final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))) {

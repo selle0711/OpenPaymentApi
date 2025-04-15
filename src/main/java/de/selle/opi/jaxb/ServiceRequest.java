@@ -128,7 +128,7 @@ public class ServiceRequest {
      * implementation already in place.
      */
     @XmlAttribute(name = "WorkstationID")
-    protected Byte workstationID;
+    protected String workstationID;
 
     @XmlAttribute(name = "ApplicationSender")
     protected String applicationSender;
@@ -207,9 +207,9 @@ public class ServiceRequest {
      * 
      * @return
      *         possible object is
-     *         {@link Byte }
+     *         {@link String }
      */
-    public Byte getWorkstationID() {
+    public String getWorkstationID() {
 	return this.workstationID;
     }
 
@@ -218,9 +218,9 @@ public class ServiceRequest {
      * 
      * @param value
      *              allowed object is
-     *              {@link Byte }
+     *              {@link String }
      */
-    public void setWorkstationID(final Byte value) {
+    public void setWorkstationID(final String value) {
 	this.workstationID = value;
     }
 
