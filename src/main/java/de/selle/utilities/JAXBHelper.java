@@ -170,7 +170,7 @@ public final class JAXBHelper {
 				xsdSchema = schemaFactory.newSchema(xsdUrl);
 			} else {
 				logger.warn("Schema-File '" + xsdFile
-						+ "' nicht �ber clazz.getResource() gefunden. Versuche clazz.getResouceAsStrem()");
+						+ "' nicht über clazz.getResource() gefunden. Versuche clazz.getResouceAsStrem()");
 				final InputStream is = clazz.getClassLoader().getResourceAsStream(xsdFile);
 				if (is != null) {
 					xsdSchema = schemaFactory.newSchema(new StreamSource(is));

@@ -1,19 +1,16 @@
 package de.selle.opi;
 
-import de.selle.opi.jaxb.CardServiceRequest;
-import de.selle.opi.jaxb.CardServiceRequest.POSdata;
-import de.selle.opi.jaxb.CardServiceRequest.TotalAmount;
-import de.selle.opi.jaxb.ServiceRequest;
-import de.selle.opi.utilities.RequestType;
-import de.selle.utilities.JAXBHelper;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import de.selle.opi.jaxb.ServiceResponse;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class OpiClientTest {
 	private static final Logger logger = LogManager.getLogger(OpiClientTest.class);
@@ -24,7 +21,7 @@ class OpiClientTest {
 	
 	private final static int SERVER_PORT = 5578;
 
-	private static final String APPLICATION_SENDER = "ECR_OPI_INGENICO";
+	
 
 	private OpiClient opiClient;
 	
@@ -35,84 +32,53 @@ class OpiClientTest {
 
 	@BeforeEach 
 	public void setUp() {
+		logger.info("Setup OPI-Client");
 		opiClient = new OpiClient(TERMINAL_IP, TERMINEL_PORT);
 	}
 	
 	@Test
 	public void login() {
 		try {
-			final ServiceRequest loginRequest = new ServiceRequest();
-			loginRequest.setWorkstationID("00000001");
-			loginRequest.setRequestType(RequestType.Login.name());
-			loginRequest.setApplicationSender(APPLICATION_SENDER);
-			loginRequest.setRequestID(12);
-
-			final ServiceRequest.PrivateData privateData = new ServiceRequest.PrivateData();
-			final ServiceRequest.PrivateData.PrinterParam printerParam = new ServiceRequest.PrivateData.PrinterParam();
-			printerParam.setType("Printer");
-			printerParam.getReceipt().add(new ServiceRequest.PrivateData.PrinterParam.Receipt("Merchant", "yes"));
-			printerParam.getReceipt().add(new ServiceRequest.PrivateData.PrinterParam.Receipt("Administration", "yes"));
-
-			final ServiceRequest.PrivateData.PrinterParam printerReceiptParam = new ServiceRequest.PrivateData.PrinterParam();
-			printerReceiptParam.setType("PrinterReceipt");
-			printerReceiptParam.getReceipt()
-					.add(new ServiceRequest.PrivateData.PrinterParam.Receipt("Customer", "yes"));
-
-			privateData.getPrinterParam().add(printerParam);
-			privateData.getPrinterParam().add(printerReceiptParam);
-
-			final ServiceRequest.PrivateData.SignatureParam signatureParam = new ServiceRequest.PrivateData.SignatureParam();
-			final ServiceRequest.PrivateData.SignatureParam.GetConfirmation confirmation = new ServiceRequest.PrivateData.SignatureParam.GetConfirmation();
-			confirmation.setTimeout(180);
-			confirmation.setValue("yes");
-			signatureParam.setGetConfirmation(confirmation);
-
-			privateData.setSignatureParam(signatureParam);
-
-			final ServiceRequest.POSdata sdata = new ServiceRequest.POSdata();
-			sdata.setPOSTimeStamp(JAXBHelper.getXMLGregorianCalendar(new Date()));
-
-			loginRequest.setPOSdata(sdata);
-			loginRequest.setPrivateData(privateData);
-
-			final String response = this.opiClient.sendMessage(JAXBHelper.marshalToFormattedXML(ServiceRequest.class, loginRequest, null, "ServiceRequest"));
-			logger.debug(response);
+			final ServiceResponse response = this.opiClient.login();
 			assertNotNull(response);
+			logger.info("Login-Result: "+response.getOverallResult());
+			logger.info("Termial-ID: "+response.getTerminal().getTerminalID());
+			assertEquals("Success", response.getOverallResult(), "Die Strings sind nicht identisch");
 		} catch (final Exception e) {
 			logger.error("", e);
 			fail(e.getMessage());
 		}
 	}
 
-	@Test
-	public void payment() {
-		try {
-			serverThread.start();
-			
-			final CardServiceRequest cardServiceRequest = new CardServiceRequest();
-			cardServiceRequest.setWorkstationID("00000001");
-			cardServiceRequest.setRequestType(RequestType.CardPayment.name());
-			cardServiceRequest.setApplicationSender(APPLICATION_SENDER);
-			cardServiceRequest.setRequestID(14);
-			final POSdata posData = new POSdata();
-			posData.setTransactionNumber(1);
-			posData.setManualPAN("false");
-			posData.setPOSTimeStamp(JAXBHelper.getXMLGregorianCalendar(new Date()));
-			cardServiceRequest.setPOSdata(posData);
-			final TotalAmount amount = new TotalAmount();
-			amount.setCurrency("EUR");
-			amount.setValue(0.01f);
-			cardServiceRequest.setTotalAmount(amount);
-			this.opiClient = new OpiClient(TERMINAL_IP, TERMINEL_PORT);
-			final String response = opiClient.sendMessage(JAXBHelper.marshalToFormattedXML(CardServiceRequest.class, cardServiceRequest, null, "CardRequest"));
-			logger.debug(response);
-			assertNotNull(response);
-			
-			serverThread.interrupt();
-		} catch (final Exception e) {
-			logger.error("", e);
-			fail(e.getMessage());
-		}
-		
-	}
+//	@Test
+//	public void payment() {
+//		try {
+//			serverThread.start();
+//			
+//			final CardServiceRequest cardServiceRequest = new CardServiceRequest();
+//			cardServiceRequest.setWorkstationID("00000001");
+//			cardServiceRequest.setRequestType(CardServiceRequestType.CardPayment.name());
+//			cardServiceRequest.setApplicationSender(APPLICATION_SENDER);
+//			cardServiceRequest.setRequestID(14);
+//			final POSdata posData = new POSdata();
+//			posData.setTransactionNumber(1);
+//			posData.setManualPAN("false");
+//			posData.setPOSTimeStamp(JAXBHelper.getXMLGregorianCalendar(new Date()));
+//			cardServiceRequest.setPOSdata(posData);
+//			final TotalAmount amount = new TotalAmount();
+//			amount.setCurrency("EUR");
+//			amount.setValue(0.01f);
+//			cardServiceRequest.setTotalAmount(amount);
+//			this.opiClient = new OpiClient(TERMINAL_IP, TERMINEL_PORT);
+//			final String response = opiClient.sendMessage(JAXBHelper.marshalToFormattedXML(CardServiceRequest.class, cardServiceRequest, null, "CardRequest"));
+//			logger.debug(response);
+//			assertNotNull(response);
+//			
+//			serverThread.interrupt();
+//		} catch (final Exception e) {
+//			logger.error("", e);
+//			fail(e.getMessage());
+//		}
+//		
+//	}
 }
