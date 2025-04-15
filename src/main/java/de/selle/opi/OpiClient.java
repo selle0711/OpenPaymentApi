@@ -45,8 +45,9 @@ public class OpiClient {
             // Empfange die Antwort
             final StringBuilder xmlResponse = new StringBuilder();
             final char[] buffer = new char[65535];
-            in.read(buffer);
-            for (final char letter: buffer) {
+            final int countLetter = in.read(buffer);
+            for (int i = 0; i < countLetter; i++) {
+            	final char letter = buffer[i];
             	if (Character.isLetterOrDigit(letter) || Character.isWhitespace(letter) || JAXBHelper.isPunctuation(letter)) {
             		xmlResponse.append(letter);
             	}
