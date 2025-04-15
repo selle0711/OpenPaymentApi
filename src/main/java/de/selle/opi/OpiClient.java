@@ -35,7 +35,7 @@ public class OpiClient {
         try (final Socket socket = new Socket(this.serverIp, this.port);
              final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))) {
 
-            socket.setSoTimeout(5 * 1000); // 5s Timeout
+            socket.setSoTimeout(180 * 1000); // 180s Timeout
 
             // Sende die Nachricht
             socket.getOutputStream().write(new byte[]{0x00,0x00,0x03, 0x5f});

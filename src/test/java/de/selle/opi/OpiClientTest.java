@@ -21,12 +21,24 @@ class OpiClientTest {
 	private final static String TERMINAL_IP = "192.168.178.76";
 
 	private final static int TERMINEL_PORT = 5577;
+	
+	private final static int SERVER_PORT = 5578;
 
 	private static final String APPLICATION_SENDER = "ECR_OPI_INGENICO";
 
 	private OpiClient opiClient;
+	
+	private final Thread serverThread = new Thread(() -> {
+		final OpiServer server = new OpiServer(SERVER_PORT);
+		server.start();
+	});
 
-	@BeforeEach
+	@BeforeEach 
+	public void setUp() {
+		opiClient = new OpiClient(TERMINAL_IP, TERMINEL_PORT);
+	}
+	
+	@Test
 	public void login() {
 		try {
 			final ServiceRequest loginRequest = new ServiceRequest();
@@ -63,7 +75,6 @@ class OpiClientTest {
 			loginRequest.setPOSdata(sdata);
 			loginRequest.setPrivateData(privateData);
 
-			this.opiClient = new OpiClient(TERMINAL_IP, TERMINEL_PORT);
 			final String response = this.opiClient.sendMessage(JAXBHelper.marshalToFormattedXML(ServiceRequest.class, loginRequest, null, "ServiceRequest"));
 			logger.debug(response);
 			assertNotNull(response);
@@ -76,6 +87,8 @@ class OpiClientTest {
 	@Test
 	public void payment() {
 		try {
+			serverThread.start();
+			
 			final CardServiceRequest cardServiceRequest = new CardServiceRequest();
 			cardServiceRequest.setWorkstationID("00000001");
 			cardServiceRequest.setRequestType(RequestType.CardPayment.name());
@@ -90,13 +103,16 @@ class OpiClientTest {
 			amount.setCurrency("EUR");
 			amount.setValue(0.01f);
 			cardServiceRequest.setTotalAmount(amount);
-			
+			this.opiClient = new OpiClient(TERMINAL_IP, TERMINEL_PORT);
 			final String response = opiClient.sendMessage(JAXBHelper.marshalToFormattedXML(CardServiceRequest.class, cardServiceRequest, null, "CardRequest"));
 			logger.debug(response);
 			assertNotNull(response);
+			
+			serverThread.interrupt();
 		} catch (final Exception e) {
 			logger.error("", e);
 			fail(e.getMessage());
 		}
+		
 	}
 }
